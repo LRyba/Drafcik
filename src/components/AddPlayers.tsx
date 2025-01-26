@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { TextField, Button, Box, styled, Stack, } from '@mui/material';
+import { TextField, Button, Box, styled, Stack } from '@mui/material';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playersState } from '../states/PlayerState';
-import { ColorKey, Player } from '../model/model';
+import { Color, Player } from '../model/model';
 import { ArrowDownward, ArrowUpward, Close } from '@mui/icons-material';
 import { navigationState } from '../states/NavigationState';
 
@@ -48,7 +48,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const PlayerList = ({ players, setPlayers }: { players: Player[], setPlayers: React.Dispatch<React.SetStateAction<Player[]>> }) => {
+const PlayerList = ({ players, setPlayers, }: { players: Player[]; setPlayers: React.Dispatch<React.SetStateAction<Player[]>>; }) => {
   const PlayerItem = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -99,7 +99,12 @@ const PlayerList = ({ players, setPlayers }: { players: Player[], setPlayers: Re
       {players.map((player, index) => (
         <PlayerItem key={index}>
           <PlayerInfo>
-            <img loading='eager' src={player.portrait} alt="portrait" style={{ height: '8rem', boxShadow: '0px 0px 12px rgba(0, 0, 0, 1)' }} />
+            <img
+              loading='eager'
+              src={player.portrait}
+              alt='portrait'
+              style={{ height: '8rem', boxShadow: '0px 0px 12px rgba(0, 0, 0, 1)' }}
+            />
             <NameSpan>{player.name}</NameSpan>
             <Stack spacing={'3px'}>
               {Object.entries(player.colors).map(([color, isSelected]) =>
@@ -107,17 +112,16 @@ const PlayerList = ({ players, setPlayers }: { players: Player[], setPlayers: Re
               )}
             </Stack>
           </PlayerInfo>
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <ActionButton onClick={() => movePlayer(index, -1)}><ArrowUpward style={{ fontSize: '1.5rem' }} /></ActionButton>
-            <ActionButton onClick={() => handleRemovePlayer(index)}><Close style={{ fontSize: '1.5rem' }} /></ActionButton>
-            <ActionButton onClick={() => movePlayer(index, 1)}><ArrowDownward style={{ fontSize: '1.5rem' }} /></ActionButton>
+          <Box display='flex' flexDirection='column' alignItems='flex-end'>
+            <ActionButton onClick={() => movePlayer(index, -1)}> <ArrowUpward style={{ fontSize: '1.5rem' }} /> </ActionButton>
+            <ActionButton onClick={() => handleRemovePlayer(index)}> <Close style={{ fontSize: '1.5rem' }} /> </ActionButton>
+            <ActionButton onClick={() => movePlayer(index, 1)}> <ArrowDownward style={{ fontSize: '1.5rem' }} /> </ActionButton>
           </Box>
         </PlayerItem>
       ))}
     </Stack>
   );
 };
-
 
 const defaultPlayer: Player = {
   name: '',
@@ -128,7 +132,7 @@ const defaultPlayer: Player = {
     red: false,
     green: false,
   },
-  matches: [],
+  matchIds: [],
   points: 0,
 };
 
@@ -141,7 +145,7 @@ export const AddPlayers = () => {
     setNewPlayer({ ...newPlayer, name: value });
   }
 
-  function handlePlayerColorChange(color: ColorKey): void {
+  function handlePlayerColorChange(color: Color): void {
     setNewPlayer((currentPlayer) => ({
       ...currentPlayer,
       colors: {
@@ -159,28 +163,28 @@ export const AddPlayers = () => {
     setPlayers([...players, newPlayerWithPortrait]);
   }
 
-
   return (
     <Stack spacing={3}>
-      <Box display="flex" justifyContent="center" alignItems="center" gap="2rem">
-        <CustomImage src="/colors/white.png" alt="white" isSelected={newPlayer.colors.white} onClick={() => handlePlayerColorChange("white")} />
-        <CustomImage src="/colors/blue.png" alt="blue" isSelected={newPlayer.colors.blue} onClick={() => handlePlayerColorChange("blue")} />
-        <CustomImage src="/colors/black.png" alt="black" isSelected={newPlayer.colors.black} onClick={() => handlePlayerColorChange("black")} />
-        <CustomImage src="/colors/red.png" alt="red" isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange("red")} />
-        <CustomImage src="/colors/green.png" alt="green" isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange("green")} />
+      <Box display='flex' justifyContent='center' alignItems='center' gap='2rem'>
+        <CustomImage src='/colors/white.png' alt='white' isSelected={newPlayer.colors.white} onClick={() => handlePlayerColorChange('white')} />
+        <CustomImage src='/colors/blue.png' alt='blue' isSelected={newPlayer.colors.blue} onClick={() => handlePlayerColorChange('blue')} />
+        <CustomImage src='/colors/black.png' alt='black' isSelected={newPlayer.colors.black} onClick={() => handlePlayerColorChange('black')} />
+        <CustomImage src='/colors/red.png' alt='red' isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange('red')} />
+        <CustomImage src='/colors/green.png' alt='green' isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange('green')} />
       </Box>
       <CustomTextField
-        id="playerName"
-        label="Dodaj zawodnika"
+        label='Dodaj zawodnika'
         autoFocus
         fullWidth
-        variant="outlined"
+        variant='outlined'
         inputProps={{ sx: { color: 'black', fontFamily: 'immortal', fontSize: '1rem' } }}
-        InputLabelProps={{ sx: { color: 'primary.main', fontFamily: 'immortal', fontSize: '1rem' } }}
+        InputLabelProps={{
+          sx: { color: 'primary.main', fontFamily: 'immortal', fontSize: '1rem' },
+        }}
         onChange={(e) => handlePlayerNameChange(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
       />
-      <CustomButton type="submit" fullWidth variant="contained" onClick={() => setNavigation("bracket")}>
+      <CustomButton type='submit' fullWidth variant='contained' onClick={() => setNavigation('bracket')}>
         Wygeneruj drafcik
       </CustomButton>
       <PlayerList players={players} setPlayers={setPlayers} />
