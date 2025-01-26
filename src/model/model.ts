@@ -9,13 +9,14 @@ export interface Player {
         green: boolean;
     }
     portrait?: string;
-    matches: Match[];
+    matchIds: number[];
     points: number;
 }
 
 export type Color = keyof Player['colors'];
 
 export interface Match {
+    id: number;
     player1: Player;
     player2: Player;
     score: "2:0" | "2:1" | "1:2" | "0:2" | undefined;
@@ -23,5 +24,5 @@ export interface Match {
 
 export interface Round {
     matches: Match[];
-    waitingPlayer: Player;
+    waitingPlayer: Player | undefined;
 }
