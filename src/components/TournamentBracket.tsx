@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { playersState } from '../states/PlayerState';
 import { matchesState } from '../states/MatchesState';
 import { Match, Player, Round } from '../model/model';
