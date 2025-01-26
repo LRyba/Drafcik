@@ -15,24 +15,37 @@ export const TournamentBracket = () => {
     const [rounds, setRounds] = useState<Round[]>([]);
 
     const generateTournamentRounds = (players: Player[]): Round[] => {
-        // Use the roundrobin library to generate the matches
         const playerNames = players.map(player => player.name);
-        const roundsRobin = robin(playerNames.length, playerNames);
+        const robinOutput = robin(playerNames.length, playerNames);
 
-        const generatedRounds: Round[] = roundsRobin.map((round: string[][], roundIndex: any) => {
+        const generatedRounds: Round[] = robinOutput.map((round: string[][], roundIndex: any) => {
+            const waitingPlayers: Player[] = [...players];
             const matches: Match[] = round.map((matchPair: string[]) => {
                 const player1 = players.find(player => player.name === matchPair[0]);
                 const player2 = players.find(player => player.name === matchPair[1]);
-                return {
-                    player1: player1!,
-                    player2: player2!,
-                    score: undefined, // Initial score is undefined
-                };
+
+                //TODO fix player matches push logic
+                if (player1 && player2) {
+                    waitingPlayers.splice(waitingPlayers.indexOf(player1), 1);
+                    waitingPlayers.splice(waitingPlayers.indexOf(player2), 1);
+
+                    const match = {
+                        player1: player1,
+                        player2: player2,
+                        score: undefined,
+                    }
+
+                    player1.matches.push(match);
+                    player2.matches.push(match);
+
+                    return match;
+                }
+                throw new Error('Player not found');
             });
 
             return {
                 matches: matches,
-                waitingPlayers: [], // This example doesn't handle waiting players, but you could add logic here
+                waitingPlayer: waitingPlayers[0],
             };
         });
 
@@ -43,14 +56,9 @@ export const TournamentBracket = () => {
     };
 
     const updatePlayersWithMatches = () => {
-
-        // Create a new array of players with updated matches
         const updatedPlayers = players.map(player => {
-            // Filter matches where the current player is either player1 or player2
             const playerMatches = matches.filter(match =>
                 match.player1.name === player.name || match.player2.name === player.name);
-
-            // Return a new player object with the updated matches array
             return {
                 ...player,
                 matches: playerMatches,
@@ -84,8 +92,8 @@ export const TournamentBracket = () => {
         const scores: Match['score'][] = ['2:0', '2:1', '1:2', '0:2'];
 
         const handleScoreSelect = (score: Match['score']) => {
-            setSelectedScore(score); // Set the selected score to highlight the button
-            onUpdateScore(score); // Call the provided onUpdateScore function to update the match score
+            setSelectedScore(score);
+            onUpdateScore(score);
         };
 
         return (
@@ -101,8 +109,8 @@ export const TournamentBracket = () => {
                             variant="outlined"
                             onClick={() => handleScoreSelect(score)}
                             style={{
-                                backgroundColor: selectedScore === score ? '#ab8b16' : 'transparent', // Highlight the selected score button
-                                color: selectedScore === score ? 'white' : 'black', // Change text color for selected button
+                                backgroundColor: selectedScore === score ? '#ab8b16' : 'transparent',
+                                color: selectedScore === score ? 'white' : 'black',
                             }}
                         >
                             {score}
@@ -117,16 +125,10 @@ export const TournamentBracket = () => {
         );
     };
 
-    console.log(matches);
-
-
-
-    // Effect hook to generate rounds on initial render
     useEffect(() => {
         if (rounds.length === 0) {
             const generatedRounds = generateTournamentRounds(players);
             setRounds(generatedRounds);
-            // Update matches state with all matches from all rounds
             const allMatches = generatedRounds.flatMap(round => round.matches);
             setMatches(allMatches);
         }
@@ -136,7 +138,6 @@ export const TournamentBracket = () => {
         updatePlayersWithMatches();
     }, [rounds]);
 
-    // Basic styling for now, will need to be expanded
     const roundStyle = {
         display: 'flex',
         justifyContent: 'center',
@@ -159,6 +160,7 @@ export const TournamentBracket = () => {
                         {round.matches.map((match, matchIndex) => (
                             <MatchItem key={matchIndex} match={match} onUpdateScore={(score) => handleUpdateScore(`${roundIndex}-${matchIndex}`, score)} />
                         ))}
+                        {round.waitingPlayer && <h3>Przerwa: {round.waitingPlayer.name}</h3>}
                     </Stack>
                 </div>
             ))}

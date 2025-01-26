@@ -13,7 +13,7 @@ export interface Player {
     points: number;
 }
 
-export type ColorKey = keyof Player['colors'];
+export type Color = keyof Player['colors'];
 
 export interface Match {
     player1: Player;
@@ -23,5 +23,5 @@ export interface Match {
 
 export interface Round {
     matches: Match[];
-    waitingPlayers: Player[];
+    waitingPlayer: Player;
 }

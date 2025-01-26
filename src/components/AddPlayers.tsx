@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextField, Button, Box, styled, Stack, } from '@mui/material';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playersState } from '../states/PlayerState';
-import { ColorKey, Player } from '../model/model';
+import { Color, Player } from '../model/model';
 import { ArrowDownward, ArrowUpward, Close } from '@mui/icons-material';
 import { navigationState } from '../states/NavigationState';
 
@@ -141,7 +141,7 @@ export const AddPlayers = () => {
     setNewPlayer({ ...newPlayer, name: value });
   }
 
-  function handlePlayerColorChange(color: ColorKey): void {
+  function handlePlayerColorChange(color: Color): void {
     setNewPlayer((currentPlayer) => ({
       ...currentPlayer,
       colors: {
@@ -169,12 +169,7 @@ export const AddPlayers = () => {
         <CustomImage src="/colors/red.png" alt="red" isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange("red")} />
         <CustomImage src="/colors/green.png" alt="green" isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange("green")} />
       </Box>
-      <CustomTextField
-        id="playerName"
-        label="Dodaj zawodnika"
-        autoFocus
-        fullWidth
-        variant="outlined"
+      <CustomTextField label="Dodaj zawodnika" autoFocus fullWidth variant="outlined"
         inputProps={{ sx: { color: 'black', fontFamily: 'immortal', fontSize: '1rem' } }}
         InputLabelProps={{ sx: { color: 'primary.main', fontFamily: 'immortal', fontSize: '1rem' } }}
         onChange={(e) => handlePlayerNameChange(e.target.value)}
