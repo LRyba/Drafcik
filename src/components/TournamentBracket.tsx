@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playersState } from '../states/PlayerState';
 import { matchesState } from '../states/MatchesState';
 import { Match, Player, Round } from '../model/model';
@@ -8,8 +8,8 @@ import { Button, Stack, styled } from '@mui/material';
 const robin = require('roundrobin');
 
 export const TournamentBracket = () => {
-  const players = useRecoilValue(playersState);
-  const setMatches = useSetRecoilState(matchesState);
+  const [players, setPlayers] = useRecoilState(playersState);
+  const [matches, setMatches] = useRecoilState(matchesState);
   const [rounds, setRounds] = useState<Round[]>([]);
 
   const generateTournamentRounds = (players: Player[]): Round[] => {
@@ -19,14 +19,12 @@ export const TournamentBracket = () => {
 
     const generatedRounds: Round[] = robinOutput.map((round: string[][], roundIndex: any) => {
       const unmatchedPlayers: Player[] = [...players];
-      const matches: Match[] = round.map((matchPair: string[]) => {
+      const roundMatches: Match[] = round.map((matchPair: string[]) => {
         const player1 = players.find((player) => player.name === matchPair[0]) as Player;
         const player2 = players.find((player) => player.name === matchPair[1]) as Player;
 
         unmatchedPlayers.splice(unmatchedPlayers.indexOf(player1), 1);
         unmatchedPlayers.splice(unmatchedPlayers.indexOf(player2), 1);
-        player1.matchIds.push(matchId);
-        player2.matchIds.push(matchId);
 
         const match = {
           id: matchId++,
@@ -38,7 +36,7 @@ export const TournamentBracket = () => {
       });
 
       return {
-        matches: matches,
+        matches: roundMatches,
         waitingPlayer: unmatchedPlayers[0] || undefined,
       };
     });
@@ -47,6 +45,15 @@ export const TournamentBracket = () => {
     setMatches(allMatches);
 
     return generatedRounds;
+  };
+
+  const updatePlayersWithMatches = () => {
+    const updatedPlayers = players.map((player) => {
+      const playerMatches = matches.filter((match) => match.player1.name === player.name || match.player2.name === player.name);
+      return { ...player, matchIds: playerMatches.map((match) => match.id) };
+    });
+
+    setPlayers(updatedPlayers);
   };
 
   const MatchElement = ({ match, onUpdateScore }: { match: Match; onUpdateScore: (score: Match['score']) => void }) => {
@@ -120,6 +127,10 @@ export const TournamentBracket = () => {
       setMatches(allMatches);
     }
   }, [players, setMatches]);
+
+  useEffect(() => {
+    updatePlayersWithMatches();
+  }, [rounds]);
 
   const roundStyle = {
     display: 'flex',

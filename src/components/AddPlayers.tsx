@@ -48,13 +48,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const PlayerList = ({
-  players,
-  setPlayers,
-}: {
-  players: Player[];
-  setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
-}) => {
+const PlayerList = ({ players, setPlayers, }: { players: Player[]; setPlayers: React.Dispatch<React.SetStateAction<Player[]>>; }) => {
   const PlayerItem = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
