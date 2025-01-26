@@ -114,27 +114,14 @@ const PlayerList = ({
             <NameSpan>{player.name}</NameSpan>
             <Stack spacing={"3px"}>
               {Object.entries(player.colors).map(([color, isSelected]) =>
-                isSelected ? (
-                  <img
-                    key={color}
-                    src={`/colors/${color}.png`}
-                    alt={color}
-                    style={{ height: "2rem" }}
-                  />
-                ) : null
+                isSelected ? <img key={color} src={`/colors/${color}.png`} alt={color} style={{ height: "2rem" }} /> : null
               )}
             </Stack>
           </PlayerInfo>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <ActionButton onClick={() => movePlayer(index, -1)}>
-              <ArrowUpward style={{ fontSize: "1.5rem" }} />
-            </ActionButton>
-            <ActionButton onClick={() => handleRemovePlayer(index)}>
-              <Close style={{ fontSize: "1.5rem" }} />
-            </ActionButton>
-            <ActionButton onClick={() => movePlayer(index, 1)}>
-              <ArrowDownward style={{ fontSize: "1.5rem" }} />
-            </ActionButton>
+            <ActionButton onClick={() => movePlayer(index, -1)}> <ArrowUpward style={{ fontSize: "1.5rem" }} /> </ActionButton>
+            <ActionButton onClick={() => handleRemovePlayer(index)}> <Close style={{ fontSize: "1.5rem" }} /> </ActionButton>
+            <ActionButton onClick={() => movePlayer(index, 1)}> <ArrowDownward style={{ fontSize: "1.5rem" }} /> </ActionButton>
           </Box>
         </PlayerItem>
       ))}
@@ -185,36 +172,11 @@ export const AddPlayers = () => {
   return (
     <Stack spacing={3}>
       <Box display="flex" justifyContent="center" alignItems="center" gap="2rem">
-        <CustomImage
-          src="/colors/white.png"
-          alt="white"
-          isSelected={newPlayer.colors.white}
-          onClick={() => handlePlayerColorChange("white")}
-        />
-        <CustomImage
-          src="/colors/blue.png"
-          alt="blue"
-          isSelected={newPlayer.colors.blue}
-          onClick={() => handlePlayerColorChange("blue")}
-        />
-        <CustomImage
-          src="/colors/black.png"
-          alt="black"
-          isSelected={newPlayer.colors.black}
-          onClick={() => handlePlayerColorChange("black")}
-        />
-        <CustomImage
-          src="/colors/red.png"
-          alt="red"
-          isSelected={newPlayer.colors.red}
-          onClick={() => handlePlayerColorChange("red")}
-        />
-        <CustomImage
-          src="/colors/green.png"
-          alt="green"
-          isSelected={newPlayer.colors.green}
-          onClick={() => handlePlayerColorChange("green")}
-        />
+        <CustomImage src="/colors/white.png" alt="white" isSelected={newPlayer.colors.white} onClick={() => handlePlayerColorChange("white")} />
+        <CustomImage src="/colors/blue.png" alt="blue" isSelected={newPlayer.colors.blue} onClick={() => handlePlayerColorChange("blue")} />
+        <CustomImage src="/colors/black.png" alt="black" isSelected={newPlayer.colors.black} onClick={() => handlePlayerColorChange("black")} />
+        <CustomImage src="/colors/red.png" alt="red" isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange("red")} />{" "}
+        <CustomImage src="/colors/green.png" alt="green" isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange("green")} />
       </Box>
       <CustomTextField
         label="Dodaj zawodnika"
@@ -228,12 +190,7 @@ export const AddPlayers = () => {
         onChange={(e) => handlePlayerNameChange(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && addPlayer()}
       />
-      <CustomButton
-        type="submit"
-        fullWidth
-        variant="contained"
-        onClick={() => setNavigation("bracket")}
-      >
+      <CustomButton type="submit" fullWidth variant="contained" onClick={() => setNavigation("bracket")}>
         Wygeneruj drafcik
       </CustomButton>
       <PlayerList players={players} setPlayers={setPlayers} />
