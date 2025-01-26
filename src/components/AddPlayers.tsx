@@ -175,7 +175,7 @@ export const AddPlayers = () => {
         <CustomImage src='/colors/white.png' alt='white' isSelected={newPlayer.colors.white} onClick={() => handlePlayerColorChange('white')} />
         <CustomImage src='/colors/blue.png' alt='blue' isSelected={newPlayer.colors.blue} onClick={() => handlePlayerColorChange('blue')} />
         <CustomImage src='/colors/black.png' alt='black' isSelected={newPlayer.colors.black} onClick={() => handlePlayerColorChange('black')} />
-        <CustomImage src='/colors/red.png' alt='red' isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange('red')} />{' '}
+        <CustomImage src='/colors/red.png' alt='red' isSelected={newPlayer.colors.red} onClick={() => handlePlayerColorChange('red')} />
         <CustomImage src='/colors/green.png' alt='green' isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange('green')} />
       </Box>
       <CustomTextField
