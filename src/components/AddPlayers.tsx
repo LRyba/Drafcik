@@ -165,7 +165,7 @@ export const AddPlayers = (props: AddPlayersProps) => {
       ...newPlayer,
       portrait: `/portraits/portrait_${Math.floor(Math.random() * 32) + 1}.png`,
     };
-    setPlayers([...players, newPlayerWithPortrait]);
+    setPlayers([newPlayerWithPortrait, ...players]);
   }
 
   return (

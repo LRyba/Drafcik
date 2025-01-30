@@ -8,13 +8,14 @@ import { roundsState } from './states/RoundsState';
 import { AddPlayers } from './components/AddPlayers';
 import { TournamentBracket } from './components/TournamentBracket';
 import { Leaderboard } from './components/Leaderboard';
-import { useEffect } from 'react';
 const robin = require('roundrobin');
 
 function App() {
   const [navigation, setNavigation] = useRecoilState(navigationState);
   const [players, setPlayers] = useRecoilState(playersState);
   const [rounds, setRounds] = useRecoilState(roundsState);
+
+  console.log(players);
 
   const generateTournamentRounds = (players: Player[]): void => {
     const playerNames = players.map((player) => player.name);
@@ -48,7 +49,7 @@ function App() {
 
     const updatedPlayers = players.map((player) => {
       const playerMatches = generatedRounds.flatMap((round) => round.matches).filter((match) => match.player1.name === player.name || match.player2.name === player.name);
-      return { ...player, matchIds: playerMatches.map((match) => match.id) };
+      return { ...player, matchIds: playerMatches.map((match) => match.id), points: 0 };
     });
     setPlayers(updatedPlayers);
 
@@ -60,6 +61,24 @@ function App() {
       matches: round.matches.map((match) => (match.id.toString() === matchId ? { ...match, score } : match)),
     }));
     setRounds(updatedRounds);
+    const updatedPlayers = players.map((player) => {
+      const player1Matches = updatedRounds.flatMap((round) => round.matches).filter((match) => match.player1.name === player.name);
+      const player2Matches = updatedRounds.flatMap((round) => round.matches).filter((match) => match.player2.name === player.name);
+      const playerPoints = player1Matches.reduce((acc, match) => {
+        if (match.score === '2:0') return acc + 3;
+        if (match.score === '2:1') return acc + 3;
+        if (match.score === '1:2') return acc + 1;
+        return acc;
+      }, 0) + player2Matches.reduce((acc, match) => {
+        if (match.score === '0:2') return acc + 3;
+        if (match.score === '1:2') return acc + 3;
+        if (match.score === '2:1') return acc + 1;
+        return acc;
+      }, 0);
+      return { ...player, points: playerPoints };
+
+    });
+    setPlayers(updatedPlayers);
   };
 
   return (
