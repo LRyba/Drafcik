@@ -5,6 +5,7 @@ import { playersState } from '../states/PlayerState';
 import { Color, Player } from '../model/model';
 import { ArrowDownward, ArrowUpward, Close } from '@mui/icons-material';
 import { navigationState } from '../states/NavigationState';
+import { on } from 'events';
 
 interface CustomImageProps {
   isSelected: boolean;
@@ -42,7 +43,6 @@ const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: 'black',
   fontSize: '1rem',
-  fontFamily: 'immortal',
   '&:hover': {
     backgroundColor: theme.palette.primary.light,
   },
@@ -136,7 +136,12 @@ const defaultPlayer: Player = {
   points: 0,
 };
 
-export const AddPlayers = () => {
+export interface AddPlayersProps {
+  onRoundGeneration: (players: Player[]) => void;
+}
+
+export const AddPlayers = (props: AddPlayersProps) => {
+  const { onRoundGeneration } = props;
   const [players, setPlayers] = useRecoilState(playersState);
   const [newPlayer, setNewPlayer] = useState<Player>(defaultPlayer);
   const setNavigation = useSetRecoilState(navigationState);
@@ -160,7 +165,7 @@ export const AddPlayers = () => {
       ...newPlayer,
       portrait: `/portraits/portrait_${Math.floor(Math.random() * 32) + 1}.png`,
     };
-    setPlayers([...players, newPlayerWithPortrait]);
+    setPlayers([newPlayerWithPortrait, ...players]);
   }
 
   return (
@@ -173,19 +178,19 @@ export const AddPlayers = () => {
         <CustomImage src='/colors/green.png' alt='green' isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange('green')} />
       </Box>
       <CustomTextField
-        label='Dodaj zawodnika'
+        label='Dodaj gracza'
         autoFocus
         fullWidth
         variant='outlined'
-        inputProps={{ sx: { color: 'black', fontFamily: 'immortal', fontSize: '1rem' } }}
+        inputProps={{ sx: { color: 'black', fontSize: '1rem' } }}
         InputLabelProps={{
-          sx: { color: 'primary.main', fontFamily: 'immortal', fontSize: '1rem' },
+          sx: { color: 'primary.main', fontSize: '1rem' },
         }}
         onChange={(e) => handlePlayerNameChange(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
       />
-      <CustomButton type='submit' fullWidth variant='contained' onClick={() => setNavigation('bracket')}>
-        Wygeneruj drafcik
+      <CustomButton type='submit' fullWidth variant='contained' onClick={() => { onRoundGeneration(players); setNavigation('bracket') }}>
+        Wygeneruj draft
       </CustomButton>
       <PlayerList players={players} setPlayers={setPlayers} />
     </Stack>
