@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { playersState } from '../states/PlayerState';
 import { roundsState } from '../states/RoundsState';
 import { Match, Player, Round } from '../model/model';
-import { Button, Stack, styled } from '@mui/material';
+import { Box, Button, Stack, styled } from '@mui/material';
 import { MatchElement } from './MatchElement';
 
 export interface TournamentBracketProps {
@@ -15,19 +15,10 @@ export const TournamentBracket = (props: TournamentBracketProps) => {
   const { rounds, onScoreUpdate } = props;
   const [players, setPlayers] = useRecoilState(playersState);
 
-  const roundStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '1rem',
-    border: '3px solid #ab8b16',
-    boxShadow: '0px 0px 6px rgba(0, 0, 0, 1)',
-  };
-
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '2rem', justifyContent: 'center' }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '2rem', justifyContent: 'center' }}>
       {rounds.map((round, roundIndex) => (
-        <div key={roundIndex} style={roundStyle}>
+        <Box key={roundIndex} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem', border: '3px solid #ab8b16', boxShadow: '0px 0px 6px rgba(0, 0, 0, 1)', }}>
           <Stack justifyContent="center" alignItems="center" spacing={2}>
             <h2>Runda {roundIndex + 1}</h2>
             {round.matches.map((match) => (
@@ -39,9 +30,9 @@ export const TournamentBracket = (props: TournamentBracketProps) => {
             ))}
             {round.waitingPlayer && <h3>Przerwa: {round.waitingPlayer.name}</h3>}
           </Stack>
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 

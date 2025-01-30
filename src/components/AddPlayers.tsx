@@ -178,7 +178,7 @@ export const AddPlayers = (props: AddPlayersProps) => {
         <CustomImage src='/colors/green.png' alt='green' isSelected={newPlayer.colors.green} onClick={() => handlePlayerColorChange('green')} />
       </Box>
       <CustomTextField
-        label='Dodaj zawodnika'
+        label='Dodaj gracza'
         autoFocus
         fullWidth
         variant='outlined'
